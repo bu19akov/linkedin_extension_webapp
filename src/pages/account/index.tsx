@@ -24,6 +24,7 @@ export default function Account() {
     setLoading(true);
     try {
       await supabase.auth.signOut();
+      window.postMessage({ type: 'SIGNED_OUT' }, '*');
       router.push('/auth/signin');
     } catch (error) {
       console.error('Error signing out:', error);

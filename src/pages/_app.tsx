@@ -6,20 +6,6 @@ import '../styles/globals.css';
 
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    const handleAuthStateChange = (event: any) => {
-      const { event: authEvent, session } = event.detail;
-      if (authEvent === 'SIGNED_IN') {
-        console.log('User signed in:', session.user);
-      } else if (authEvent === 'SIGNED_OUT') {
-        // Notify extension about sign out
-        window.postMessage({ type: 'SIGNED_OUT' }, '*');
-        // Clear local storage
-        localStorage.removeItem('supabase_session');
-      }
-    };
-
-    window.addEventListener('supabase.auth.stateChange', handleAuthStateChange);
-
     // Add message listener for extension communication
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
@@ -41,7 +27,6 @@ export default function App({ Component, pageProps }: AppProps) {
     window.addEventListener('message', handleMessage);
 
     return () => {
-      window.removeEventListener('supabase.auth.stateChange', handleAuthStateChange);
       window.removeEventListener('message', handleMessage);
     };
   }, []);
