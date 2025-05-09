@@ -26,6 +26,13 @@ export default function App({ Component, pageProps }: AppProps) {
 
     window.addEventListener('message', handleMessage);
 
+    // Add prod-scale class in production for global scaling
+    if (process.env.NODE_ENV === 'production') {
+      document.documentElement.classList.add('prod-scale');
+    } else {
+      document.documentElement.classList.remove('prod-scale');
+    }
+
     return () => {
       window.removeEventListener('message', handleMessage);
     };
