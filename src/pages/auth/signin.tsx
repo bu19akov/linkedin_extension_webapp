@@ -1,106 +1,67 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../../lib/supabase';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../components/ui/card';
+import { Input } from '../../../components/ui/input';
+import { Button } from '../../../components/ui/button';
+import { Label } from '../../../components/ui/label';
+import { LogIn } from 'lucide-react';
 
 export default function SignIn() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        router.push('/account');
-      }
-    };
-    
-    checkSession();
-  }, [router]);
+  const [message, setMessage] = useState('');
+  const router = useRouter();
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
-
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) throw error;
-      
-      if (data?.user) {
-        router.push('/account');
-      }
-    } catch (err) {
-      console.error('Sign in error:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred during sign in');
-    } finally {
-      setLoading(false);
+    setError('');
+    setMessage('');
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setLoading(false);
+    if (error) {
+      setError(error.message);
+    } else {
+      router.push('/');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSignIn}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] dark:from-background dark:to-muted/80">
+      <Card className="w-full max-w-md rounded-3xl shadow-2xl border-0 bg-white dark:bg-card px-8 py-10">
+        <CardHeader className="flex flex-col items-center gap-3 pb-0">
+          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">
+            <LogIn className="w-8 h-8 text-primary" />
           </div>
-
-          {error && (
-            <div className="text-red-500 text-sm text-center">{error}</div>
-          )}
-
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              {loading ? 'Signing in...' : 'Sign in'}
-            </button>
+          <CardTitle className="text-3xl font-extrabold tracking-tight">Sign In</CardTitle>
+          <CardDescription className="text-base text-muted-foreground text-center">Welcome back! Please sign in to your account.</CardDescription>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <form onSubmit={handleSignIn} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-base font-medium">Email</Label>
+              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required autoFocus className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-base font-medium">Password</Label>
+              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
+            </div>
+            {error && <div className="text-red-500 text-sm text-center font-medium">{error}</div>}
+            {message && <div className="text-green-600 text-sm text-center font-medium">{message}</div>}
+            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md" disabled={loading}>
+              {loading ? 'Signing in...' : 'Sign In'}
+            </Button>
+          </form>
+          <div className="my-6 border-t border-border" />
+          <div className="flex flex-col items-center space-y-2">
+            <a href="/auth/signup" className="text-sm text-muted-foreground hover:underline transition-colors font-medium">Don&apos;t have an account? <span className="text-primary font-semibold">Sign Up</span></a>
+            <a href="/auth/forgot" className="text-sm text-muted-foreground hover:underline transition-colors">Forgot password?</a>
           </div>
-        </form>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 } 
