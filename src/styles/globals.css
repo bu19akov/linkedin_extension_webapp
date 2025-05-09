@@ -56,13 +56,6 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%
   }
-  html.prod-scale {
-    transform: scale(0.67);
-    transform-origin: top left;
-    width: 149.25%;
-    height: 149.25%;
-    overflow-x: auto;
-  }
 }
 
 @layer base {
