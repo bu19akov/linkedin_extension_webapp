@@ -30,16 +30,14 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-[100dvh] flex items-center justify-center bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] dark:from-background dark:to-muted/80 p-4 sm:p-6">
-      <Card className="w-full max-w-sm text-base rounded-3xl shadow-2xl border-0 bg-white dark:bg-card px-2 py-6 sm:px-4 sm:py-8 max-h-[calc(100dvh-2rem)] overflow-auto">
-        <CardHeader className="flex flex-col items-center gap-2 pb-0">
-          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-2">
-            <LogIn className="w-6 h-6 text-primary" />
+    <div className="min-h-[100dvh] flex items-center justify-center bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] dark:from-background dark:to-muted/80 p-10 sm:p-8">
+      <Card className="w-full max-w-md text-base rounded-3xl shadow-2xl border-0 bg-white dark:bg-card px-4 py-8 sm:px-8 sm:py-10 max-h-[calc(100dvh-2rem)] overflow-auto">
+        <CardHeader className="flex flex-col items-center gap-3 pb-0">
+          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">
+            <LogIn className="w-8 h-8 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-bold">Sign In</CardTitle>
-          <CardDescription className="text-sm text-muted-foreground text-center">
-            Welcome back! Please sign in to your account.
-          </CardDescription>
+          <CardTitle className="text-3xl font-extrabold tracking-tight">Sign In</CardTitle>
+          <CardDescription className="text-base text-muted-foreground text-center">Welcome back! Please sign in to your account.</CardDescription>
         </CardHeader>
         <CardContent className="pt-4">
           <form onSubmit={handleSignIn} className="space-y-6">
