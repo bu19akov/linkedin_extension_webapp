@@ -8,6 +8,7 @@ import { User } from 'lucide-react';
 
 export default function Account() {
   // Change Password
+  const [oldPassword, setOldPassword] = useState('');
   const [password, setPassword] = useState('');
   const [pwError, setPwError] = useState('');
   const [pwMessage, setPwMessage] = useState('');
@@ -39,12 +40,22 @@ export default function Account() {
     setPwLoading(true);
     setPwError('');
     setPwMessage('');
+    // Re-authenticate user with old password
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email: currentEmail, password: oldPassword });
+    if (signInError) {
+      setPwError('Old password is incorrect.');
+      setPwLoading(false);
+      return;
+    }
+    // If old password is correct, update to new password
     const { error } = await supabase.auth.updateUser({ password });
     setPwLoading(false);
     if (error) {
       setPwError(error.message);
     } else {
       setPwMessage('Password updated successfully.');
+      setOldPassword('');
+      setPassword('');
     }
   };
 
@@ -63,10 +74,9 @@ export default function Account() {
       setEmLoading(false);
       return;
     }
-    const { error, data } = await supabase.auth.updateUser({ email: email });
+    const { error, data } = await supabase.auth.updateUser({ email });
     if (error) {
       setEmError(error.message);
-      // Log the full error for debugging
       // eslint-disable-next-line no-console
       console.error('Supabase email update error:', error);
       setEmLoading(false);
@@ -95,6 +105,10 @@ export default function Account() {
         </CardHeader>
         <CardContent className="pt-4">
           <form onSubmit={handleChangePassword} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="old-password" className="text-base font-medium">Old Password</Label>
+              <Input id="old-password" type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="password" className="text-base font-medium">New Password</Label>
               <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
