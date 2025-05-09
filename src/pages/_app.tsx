@@ -10,6 +10,11 @@ export default function App({ Component, pageProps }: AppProps) {
       const { event: authEvent, session } = event.detail;
       if (authEvent === 'SIGNED_IN') {
         console.log('User signed in:', session.user);
+      } else if (authEvent === 'SIGNED_OUT') {
+        // Notify extension about sign out
+        window.postMessage({ type: 'SIGNED_OUT' }, '*');
+        // Clear local storage
+        localStorage.removeItem('supabase_session');
       }
     };
 
