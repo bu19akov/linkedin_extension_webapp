@@ -20,19 +20,6 @@ export default function Account() {
     getUser();
   }, [router]);
 
-  const handleSignOut = async () => {
-    setLoading(true);
-    try {
-      await supabase.auth.signOut();
-      window.postMessage({ type: 'SIGNED_OUT' }, '*');
-      router.push('/auth/signin');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   if (!user) {
     return <div>Loading...</div>;
   }
@@ -42,13 +29,6 @@ export default function Account() {
       <div className="max-w-3xl mx-auto">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900">Account</h1>
-          <button
-            onClick={handleSignOut}
-            disabled={loading}
-            className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
-          >
-            {loading ? 'Signing out...' : 'Sign out'}
-          </button>
         </div>
         <div className="mt-6 bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
           <div className="space-y-6">
