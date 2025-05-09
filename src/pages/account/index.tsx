@@ -95,47 +95,45 @@ export default function Account() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] dark:from-background dark:to-muted/80">
-      <div className="scale-[.67] flex items-center justify-center">
-        <Card className="w-full max-w-xl rounded-3xl shadow-2xl border-0 bg-white dark:bg-card px-10 py-12">
-          <CardHeader className="flex flex-col items-center gap-3 pb-0">
-            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">
-              <User className="w-8 h-8 text-primary" />
+      <Card className="w-full max-w-lg rounded-3xl shadow-2xl border-0 bg-white dark:bg-card px-6 py-10 sm:px-10 sm:py-12">
+        <CardHeader className="flex flex-col items-center gap-3 pb-0">
+          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">
+            <User className="w-8 h-8 text-primary" />
+          </div>
+          <CardTitle className="text-3xl font-extrabold tracking-tight">Account Settings</CardTitle>
+          <CardDescription className="text-base text-muted-foreground text-center">Manage your account details below.</CardDescription>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <form onSubmit={handleChangePassword} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="old-password" className="text-base font-medium">Old Password</Label>
+              <Input id="old-password" type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
             </div>
-            <CardTitle className="text-3xl font-extrabold tracking-tight">Account Settings</CardTitle>
-            <CardDescription className="text-base text-muted-foreground text-center">Manage your account details below.</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-4">
-            <form onSubmit={handleChangePassword} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="old-password" className="text-base font-medium">Old Password</Label>
-                <Input id="old-password" type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-base font-medium">New Password</Label>
-                <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
-              </div>
-              {pwError && <div className="text-red-500 text-sm text-center font-medium">{pwError}</div>}
-              {pwMessage && <div className="text-green-600 text-sm text-center font-medium">{pwMessage}</div>}
-              <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md" disabled={pwLoading}>
-                {pwLoading ? 'Updating...' : 'Change Password'}
-              </Button>
-            </form>
-            <div className="my-8 border-t border-border" />
-            <form onSubmit={handleChangeEmail} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-base font-medium">New Email</Label>
-                <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
-                <div className="text-xs text-muted-foreground">Current: {currentEmail} {emailConfirmed ? '(verified)' : '(not verified)'}</div>
-              </div>
-              {emError && <div className="text-red-500 text-sm text-center font-medium">{emError}</div>}
-              {emMessage && <div className="text-green-600 text-sm text-center font-medium">{emMessage}</div>}
-              <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md" disabled={emLoading}>
-                {emLoading ? 'Updating...' : 'Change Email'}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-base font-medium">New Password</Label>
+              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
+            </div>
+            {pwError && <div className="text-red-500 text-sm text-center font-medium">{pwError}</div>}
+            {pwMessage && <div className="text-green-600 text-sm text-center font-medium">{pwMessage}</div>}
+            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md" disabled={pwLoading}>
+              {pwLoading ? 'Updating...' : 'Change Password'}
+            </Button>
+          </form>
+          <div className="my-8 border-t border-border" />
+          <form onSubmit={handleChangeEmail} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-base font-medium">New Email</Label>
+              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
+              <div className="text-xs text-muted-foreground">Current: {currentEmail} {emailConfirmed ? '(verified)' : '(not verified)'}</div>
+            </div>
+            {emError && <div className="text-red-500 text-sm text-center font-medium">{emError}</div>}
+            {emMessage && <div className="text-green-600 text-sm text-center font-medium">{emMessage}</div>}
+            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md" disabled={emLoading}>
+              {emLoading ? 'Updating...' : 'Change Email'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 } 
