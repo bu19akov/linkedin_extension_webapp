@@ -30,8 +30,8 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] dark:from-background dark:to-muted/80 p-4 sm:p-8">
-      <Card className="w-full max-w-md text-base rounded-3xl shadow-2xl border-0 bg-white dark:bg-card px-4 py-8 sm:px-8 sm:py-10">
+    <div className="min-h-[100dvh] flex items-center justify-center bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] dark:from-background dark:to-muted/80 p-10 sm:p-8">
+      <Card className="w-full max-w-md text-base rounded-3xl shadow-2xl border-0 bg-white dark:bg-card px-4 py-8 sm:px-8 sm:py-10 max-h-[calc(100dvh-2rem)] overflow-auto">
         <CardHeader className="flex flex-col items-center gap-3 pb-0">
           <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">
             <LogIn className="w-8 h-8 text-primary" />
