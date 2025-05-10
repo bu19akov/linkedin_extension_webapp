@@ -72,7 +72,7 @@ export default function SignUp() {
         </div>
         <CardHeader className="flex flex-col items-center gap-3 pb-0">
           <div className="text-2xl font-extrabold tracking-tight">Sign Up</div>
-          <div className="text-base text-muted-foreground text-center">Create your Kleo account below.</div>
+          <div className="text-base text-muted-foreground text-center">Create your EngageFeed account below.</div>
         </CardHeader>
         <CardContent className="pt-4">
           <form onSubmit={handleSignUp} className="space-y-6">
