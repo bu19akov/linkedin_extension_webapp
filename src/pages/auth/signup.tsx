@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../../lib/supabase';
 import { Card, CardContent, CardHeader } from '../../../components/ui/card';
@@ -14,6 +14,16 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        router.push('/account');
+      }
+    };
+    checkSession();
+  }, [router]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -88,6 +88,16 @@ export default function Account() {
     fetchUser();
   }, []);
 
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.push('/auth/signin');
+      }
+    };
+    checkSession();
+  }, [router]);
+
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setPwLoading(true);

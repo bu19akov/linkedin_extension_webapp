@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../..
 import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import { Label } from '../../../components/ui/label';
-import { LogIn } from 'lucide-react';
 import Image from 'next/image';
 
 export default function SignIn() {
@@ -16,6 +15,16 @@ export default function SignIn() {
   const [message, setMessage] = useState('');
   const router = useRouter();
   const { verified } = router.query;
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        router.push('/account');
+      }
+    };
+    checkSession();
+  }, [router]);
 
   useEffect(() => {
     if (verified === 'true') {

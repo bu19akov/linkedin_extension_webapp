@@ -12,6 +12,16 @@ export default function Confirm() {
   const { token_hash } = router.query;
 
   useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        router.push('/account');
+      }
+    };
+    checkSession();
+  }, [router]);
+
+  useEffect(() => {
     const verifyEmail = async () => {
       if (!token_hash) {
         setError('Invalid confirmation link');

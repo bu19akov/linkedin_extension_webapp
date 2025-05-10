@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { supabase } from '../../lib/supabase';
 import { Card, CardContent, CardHeader } from '../../../components/ui/card';
 import { Input } from '../../../components/ui/input';
@@ -11,6 +12,17 @@ export default function ForgotPassword() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        router.push('/account');
+      }
+    };
+    checkSession();
+  }, [router]);
 
   const handleForgot = async (e: React.FormEvent) => {
     e.preventDefault();
