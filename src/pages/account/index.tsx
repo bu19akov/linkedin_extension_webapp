@@ -5,6 +5,7 @@ import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import { Label } from '../../../components/ui/label';
 import { User } from 'lucide-react';
+import Image from 'next/image';
 
 export default function Account() {
   // Change Password
@@ -94,15 +95,12 @@ export default function Account() {
   };
 
   return (
-    <div className="min-h-[100dvh] flex items-center justify-center bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] dark:from-background dark:to-muted/80 p-4 sm:p-8">
-      <Card className="w-full max-w-md text-base rounded-3xl shadow-2xl border-0 bg-white dark:bg-card px-4 py-8 sm:px-8 sm:py-10 max-h-[calc(100dvh-2rem)] overflow-auto">
-        <CardHeader className="flex flex-col items-center gap-3 pb-0">
-          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">
-            <User className="w-8 h-8 text-primary" />
-          </div>
-          <CardTitle className="text-3xl font-extrabold tracking-tight">Account Settings</CardTitle>
-          <CardDescription className="text-base text-muted-foreground text-center">Manage your account details below.</CardDescription>
-        </CardHeader>
+    <div className="min-h-[100dvh] flex items-center justify-center bg-[#f6fbfa] p-4 sm:p-8">
+      <Card className="w-full max-w-md text-base rounded-3xl shadow-2xl border-0 bg-white px-4 py-8 sm:px-8 sm:py-10 max-h-[calc(100dvh-2rem)] overflow-auto">
+        <div className="flex flex-col items-center gap-4 mb-6">
+          <Image src="/engagefeed-logo.svg" alt="EngageFeed Logo" width={48} height={48} className="mb-2" />
+        </div>
+        <CardHeader className="flex flex-col items-center gap-3 pb-0" />
         <CardContent className="pt-4">
           <form onSubmit={handleChangePassword} className="space-y-6">
             <div className="space-y-2">
@@ -115,7 +113,7 @@ export default function Account() {
             </div>
             {pwError && <div className="text-red-500 text-sm text-center font-medium">{pwError}</div>}
             {pwMessage && <div className="text-green-600 text-sm text-center font-medium">{pwMessage}</div>}
-            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md" disabled={pwLoading}>
+            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={pwLoading}>
               {pwLoading ? 'Updating...' : 'Change Password'}
             </Button>
           </form>
@@ -128,7 +126,7 @@ export default function Account() {
             </div>
             {emError && <div className="text-red-500 text-sm text-center font-medium">{emError}</div>}
             {emMessage && <div className="text-green-600 text-sm text-center font-medium">{emMessage}</div>}
-            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md" disabled={emLoading}>
+            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={emLoading}>
               {emLoading ? 'Updating...' : 'Change Email'}
             </Button>
           </form>

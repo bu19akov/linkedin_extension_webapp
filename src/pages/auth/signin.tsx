@@ -6,6 +6,7 @@ import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import { Label } from '../../../components/ui/label';
 import { LogIn } from 'lucide-react';
+import Image from 'next/image';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -30,13 +31,13 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-[100dvh] flex items-center justify-center bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] dark:from-background dark:to-muted/80 p-10 sm:p-8">
-      <Card className="w-full max-w-md text-base rounded-3xl shadow-2xl border-0 bg-white dark:bg-card px-4 py-8 sm:px-8 sm:py-10 max-h-[calc(100dvh-2rem)] overflow-auto">
+    <div className="min-h-[100dvh] flex items-center justify-center bg-[#f6fbfa] p-4 sm:p-8">
+      <Card className="w-full max-w-md text-base rounded-3xl shadow-2xl border-0 bg-white px-4 py-8 sm:px-8 sm:py-10 max-h-[calc(100dvh-2rem)] overflow-auto">
+        <div className="flex flex-col items-center gap-4 mb-6">
+          <Image src="/engagefeed-logo.svg" alt="EngageFeed Logo" width={48} height={48} className="mb-2" />
+        </div>
         <CardHeader className="flex flex-col items-center gap-3 pb-0">
-          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">
-            <LogIn className="w-8 h-8 text-primary" />
-          </div>
-          <CardTitle className="text-3xl font-extrabold tracking-tight">Sign In</CardTitle>
+          <CardTitle className="text-2xl font-extrabold tracking-tight">Sign In</CardTitle>
           <CardDescription className="text-base text-muted-foreground text-center">Welcome back! Please sign in to your account.</CardDescription>
         </CardHeader>
         <CardContent className="pt-4">
@@ -51,7 +52,7 @@ export default function SignIn() {
             </div>
             {error && <div className="text-red-500 text-sm text-center font-medium">{error}</div>}
             {message && <div className="text-green-600 text-sm text-center font-medium">{message}</div>}
-            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md" disabled={loading}>
+            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={loading}>
               {loading ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
