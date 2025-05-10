@@ -33,7 +33,7 @@ export default function SignUp() {
     <div className="min-h-[100dvh] flex items-center justify-center bg-[#f6fbfa] p-4 sm:p-8">
       <Card className="w-full max-w-md text-base rounded-3xl shadow-2xl border-0 bg-white px-4 py-8 sm:px-8 sm:py-10 max-h-[calc(100dvh-2rem)] overflow-auto">
         <div className="flex flex-col items-center gap-4 mb-6">
-          <Image src="/kleo-logo.svg" alt="Kleo Logo" width={48} height={48} className="mb-2" />
+          <Image src="/logo.jpeg" alt="EngageFeed Logo" width={48} height={48} className="mb-2" />
         </div>
         <CardHeader className="flex flex-col items-center gap-3 pb-0">
           <div className="text-2xl font-extrabold tracking-tight">Sign Up</div>
