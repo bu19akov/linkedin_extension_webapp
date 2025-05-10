@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../../lib/supabase';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../components/ui/card';
@@ -15,6 +15,13 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const router = useRouter();
+  const { verified } = router.query;
+
+  useEffect(() => {
+    if (verified === 'true') {
+      router.push('/account?verified=true');
+    }
+  }, [verified, router]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();

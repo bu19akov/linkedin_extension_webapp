@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/router';
 import { supabase } from '../../lib/supabase';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../components/ui/card';
 import { Input } from '../../../components/ui/input';
@@ -8,6 +9,13 @@ import { User } from 'lucide-react';
 import Image from 'next/image';
 
 export default function Account() {
+  const router = useRouter();
+  const { verified } = router.query;
+  const [verificationMessage, setVerificationMessage] = useState('');
+  const messageShown = useRef(false);
+  const timerRef = useRef<NodeJS.Timeout>();
+  const [shouldShowMessage, setShouldShowMessage] = useState(false);
+
   // Change Password
   const [oldPassword, setOldPassword] = useState('');
   const [password, setPassword] = useState('');
@@ -23,6 +31,39 @@ export default function Account() {
   const [currentEmail, setCurrentEmail] = useState('');
   const [userId, setUserId] = useState('');
   const [emailConfirmed, setEmailConfirmed] = useState(false);
+
+  // Handle initial verification
+  useEffect(() => {
+    if (verified === 'true' && !messageShown.current) {
+      messageShown.current = true;
+      setShouldShowMessage(true);
+      const { pathname } = router;
+      router.replace(pathname, undefined, { shallow: true });
+    }
+  }, [verified, router]);
+
+  // Handle message display and cleanup
+  useEffect(() => {
+    if (shouldShowMessage) {
+      setVerificationMessage('Email verified successfully!');
+      
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      
+      timerRef.current = setTimeout(() => {
+        setVerificationMessage('');
+        setShouldShowMessage(false);
+        messageShown.current = false;
+      }, 5000);
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [shouldShowMessage]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -102,6 +143,11 @@ export default function Account() {
         </div>
         <CardHeader className="flex flex-col items-center gap-3 pb-0" />
         <CardContent className="pt-4">
+          {verificationMessage && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+              <p className="text-green-600 text-center font-medium">{verificationMessage}</p>
+            </div>
+          )}
           <form onSubmit={handleChangePassword} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="old-password" className="text-base font-medium">Old Password</Label>

@@ -20,7 +20,13 @@ export default function SignUp() {
     setLoading(true);
     setError('');
     setMessage('');
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { error } = await supabase.auth.signUp({ 
+      email, 
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/api/auth/confirm`
+      }
+    });
     setLoading(false);
     if (error) {
       setError(error.message);
