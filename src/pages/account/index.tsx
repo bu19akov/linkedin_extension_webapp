@@ -67,11 +67,22 @@ export default function Account() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      if (data?.user) {
-        setCurrentEmail(data.user.email || '');
-        setUserId(data.user.id);
-        setEmailConfirmed(!!data.user.email_confirmed_at);
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (user) {
+        setCurrentEmail(user.email || '');
+        setUserId(user.id);
+        setEmailConfirmed(!!user.email_confirmed_at);
+
+        // Send message to extension when user is logged in
+        window.postMessage({
+          type: 'FROM_WEBAPP',
+          payload: {
+            session,
+            user
+          }
+        }, '*');
       }
     };
     fetchUser();

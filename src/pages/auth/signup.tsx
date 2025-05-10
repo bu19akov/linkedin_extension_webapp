@@ -20,19 +20,38 @@ export default function SignUp() {
     setLoading(true);
     setError('');
     setMessage('');
-    const { error } = await supabase.auth.signUp({ 
+    const { error, data } = await supabase.auth.signUp({ 
       email, 
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/api/auth/confirm`
       }
     });
-    setLoading(false);
+    
     if (error) {
       setError(error.message);
-    } else {
-      setMessage('Check your email to verify your account.');
+      setLoading(false);
+      return;
     }
+
+    if (data.user) {
+      // Insert user data into users table
+      const { error: insertError } = await supabase.from('users').insert({
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.email?.split('@')[0] || '',
+        subscription_plan: 'Free'
+      });
+
+      if (insertError) {
+        setError('Account created but failed to set up user profile: ' + insertError.message);
+        setLoading(false);
+        return;
+      }
+    }
+
+    setLoading(false);
+    setMessage('Check your email to verify your account.');
   };
 
   return (
