@@ -137,7 +137,9 @@ export default function Account() {
       setEmLoading(false);
       return;
     }
-    const { error, data } = await supabase.auth.updateUser({ email });
+    const { error, data } = await supabase.auth.updateUser({ 
+      email
+    });
     if (error) {
       setEmError(error.message);
       // eslint-disable-next-line no-console
@@ -145,15 +147,9 @@ export default function Account() {
       setEmLoading(false);
       return;
     }
-    // Update email in users table
-    const { error: dbError } = await supabase.from('users').update({ email }).eq('id', userId);
     setEmLoading(false);
-    if (dbError) {
-      setEmError('Email updated in auth, but failed to update in users table: ' + dbError.message);
-    } else {
-      setEmMessage('Check your new email to verify the change.');
-      setCurrentEmail(email);
-    }
+    setEmMessage('Please check your new email to verify the change. You will be redirected back here after verification.');
+    setCurrentEmail(email);
   };
 
   return (

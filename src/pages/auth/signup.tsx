@@ -34,7 +34,7 @@ export default function SignUp() {
       email, 
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/api/auth/confirm`
+        emailRedirectTo: `${window.location.origin}/auth/confirm`
       }
     });
     
