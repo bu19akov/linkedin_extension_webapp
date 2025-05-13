@@ -41,24 +41,24 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-[100dvh] flex items-center justify-center bg-[#f6fbfa] p-4 sm:p-8">
-      <Card className="w-full max-w-md text-base rounded-3xl shadow-2xl border-0 bg-white px-4 py-8 sm:px-8 sm:py-10 max-h-[calc(100dvh-2rem)] overflow-auto">
-        <div className="flex flex-col items-center gap-4 mb-6">
-          <Image src="/logo.jpeg" alt="EngageFeed Logo" width={48} height={48} className="mb-2" />
+    <div className="min-h-screen flex items-center justify-center bg-[#f6fbfa] p-2">
+      <Card className="w-full max-w-sm rounded-2xl shadow-lg border-0 bg-white px-4 py-6 sm:px-6 sm:py-8 max-h-[90vh] overflow-auto">
+        <div className="flex flex-col items-center gap-2 mb-4">
+          <Image src="/logo.jpeg" alt="EngageFeed Logo" width={40} height={40} />
         </div>
-        <CardHeader className="flex flex-col items-center gap-3 pb-0">
+        <CardHeader className="flex flex-col items-center gap-2 pb-0">
           <div className="text-2xl font-extrabold tracking-tight">Forgot Password</div>
-          <div className="text-base text-muted-foreground text-center">Enter your email to receive a password reset link.</div>
+          <div className="text-base text-muted-foreground text-center">Enter your email to reset your password.</div>
         </CardHeader>
-        <CardContent className="pt-4">
-          <form onSubmit={handleForgot} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-base font-medium">Email</Label>
-              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required autoFocus className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
+        <CardContent className="pt-2">
+          <form onSubmit={handleForgot} className="space-y-4">
+            <div className="space-y-1">
+              <Label htmlFor="email" className="text-sm font-medium">Email</Label>
+              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required autoFocus className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-lg px-3 py-2 text-sm transition-all" />
             </div>
-            {error && <div className="text-red-500 text-sm text-center font-medium">{error}</div>}
-            {message && <div className="text-green-600 text-sm text-center font-medium">{message}</div>}
-            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={loading}>
+            {error && <div className="text-red-500 text-xs text-center font-medium">{error}</div>}
+            {message && <div className="text-green-600 text-xs text-center font-medium">{message}</div>}
+            <Button type="submit" className="w-full h-10 text-sm font-semibold rounded-lg shadow bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={loading}>
               {loading ? 'Sending...' : 'Send Reset Link'}
             </Button>
           </form>
