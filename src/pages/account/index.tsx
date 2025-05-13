@@ -152,44 +152,59 @@ export default function Account() {
     setCurrentEmail(email);
   };
 
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push('/auth/signin');
+  };
+
   return (
-    <div className="min-h-[100dvh] flex items-center justify-center bg-[#f6fbfa] p-4 sm:p-8">
-      <Card className="w-full max-w-md text-base rounded-3xl shadow-2xl border-0 bg-white px-4 py-8 sm:px-8 sm:py-10 max-h-[calc(100dvh-2rem)] overflow-auto">
-        <div className="flex flex-col items-center gap-4 mb-6">
-          <Image src="/logo.jpeg" alt="EngageFeed Logo" width={48} height={48} className="mb-2" />
+    <div className="min-h-screen flex items-center justify-center bg-[#f6fbfa] p-2">
+      <Card className="w-full max-w-sm rounded-2xl shadow-lg border-0 bg-white px-4 py-6 sm:px-6 sm:py-8 max-h-[90vh] overflow-auto">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col items-center gap-2">
+            <Image src="/logo.jpeg" alt="EngageFeed Logo" width={40} height={40} />
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleSignOut}
+            className="ml-auto bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-none border-0"
+          >
+            Sign Out
+          </Button>
         </div>
-        <CardHeader className="flex flex-col items-center gap-3 pb-0" />
-        <CardContent className="pt-4">
+        <CardHeader className="flex flex-col items-center gap-2 pb-0" />
+        <CardContent className="pt-2">
           {verificationMessage && (
-            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
-              <p className="text-green-600 text-center font-medium">{verificationMessage}</p>
+            <div className="mb-4 p-2 bg-green-50 border border-green-200 rounded-xl">
+              <p className="text-green-600 text-center font-medium text-sm">{verificationMessage}</p>
             </div>
           )}
-          <form onSubmit={handleChangePassword} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="old-password" className="text-base font-medium">Old Password</Label>
-              <Input id="old-password" type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
+          <form onSubmit={handleChangePassword} className="space-y-4">
+            <div className="space-y-1">
+              <Label htmlFor="old-password" className="text-sm font-medium">Old Password</Label>
+              <Input id="old-password" type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-lg px-3 py-2 text-sm transition-all" />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-base font-medium">New Password</Label>
-              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
+            <div className="space-y-1">
+              <Label htmlFor="password" className="text-sm font-medium">New Password</Label>
+              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-lg px-3 py-2 text-sm transition-all" />
             </div>
-            {pwError && <div className="text-red-500 text-sm text-center font-medium">{pwError}</div>}
-            {pwMessage && <div className="text-green-600 text-sm text-center font-medium">{pwMessage}</div>}
-            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={pwLoading}>
+            {pwError && <div className="text-red-500 text-xs text-center font-medium">{pwError}</div>}
+            {pwMessage && <div className="text-green-600 text-xs text-center font-medium">{pwMessage}</div>}
+            <Button type="submit" className="w-full h-10 text-sm font-semibold rounded-lg shadow bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={pwLoading}>
               {pwLoading ? 'Updating...' : 'Change Password'}
             </Button>
           </form>
-          <div className="my-8 border-t border-border" />
-          <form onSubmit={handleChangeEmail} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-base font-medium">New Email</Label>
-              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
+          <div className="my-6 border-t border-border" />
+          <form onSubmit={handleChangeEmail} className="space-y-4">
+            <div className="space-y-1">
+              <Label htmlFor="email" className="text-sm font-medium">New Email</Label>
+              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-lg px-3 py-2 text-sm transition-all" />
               <div className="text-xs text-muted-foreground">Current: {currentEmail} {emailConfirmed ? '(verified)' : '(not verified)'}</div>
             </div>
-            {emError && <div className="text-red-500 text-sm text-center font-medium">{emError}</div>}
-            {emMessage && <div className="text-green-600 text-sm text-center font-medium">{emMessage}</div>}
-            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl shadow-md bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={emLoading}>
+            {emError && <div className="text-red-500 text-xs text-center font-medium">{emError}</div>}
+            {emMessage && <div className="text-green-600 text-xs text-center font-medium">{emMessage}</div>}
+            <Button type="submit" className="w-full h-10 text-sm font-semibold rounded-lg shadow bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={emLoading}>
               {emLoading ? 'Updating...' : 'Change Email'}
             </Button>
           </form>
