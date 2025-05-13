@@ -11,6 +11,7 @@ import Image from 'next/image';
 export default function Account() {
   const router = useRouter();
   const { verified } = router.query;
+  const [loading, setLoading] = useState(true);
   const [verificationMessage, setVerificationMessage] = useState('');
   const messageShown = useRef(false);
   const timerRef = useRef<NodeJS.Timeout>();
@@ -31,6 +32,19 @@ export default function Account() {
   const [currentEmail, setCurrentEmail] = useState('');
   const [userId, setUserId] = useState('');
   const [emailConfirmed, setEmailConfirmed] = useState(false);
+
+  // Auth check before rendering
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.replace('/auth/signin');
+      } else {
+        setLoading(false);
+      }
+    };
+    checkSession();
+  }, [router]);
 
   // Handle initial verification
   useEffect(() => {
@@ -87,16 +101,6 @@ export default function Account() {
     };
     fetchUser();
   }, []);
-
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.push('/auth/signin');
-      }
-    };
-    checkSession();
-  }, [router]);
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,6 +160,11 @@ export default function Account() {
     await supabase.auth.signOut();
     router.push('/auth/signin');
   };
+
+  // Don't render sensitive content until auth is checked
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center bg-[#f6fbfa]">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f6fbfa] p-2">
