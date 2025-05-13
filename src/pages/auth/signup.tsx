@@ -5,25 +5,28 @@ import { Card, CardContent, CardHeader } from '../../../components/ui/card';
 import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import { Label } from '../../../components/ui/label';
+import { Checkbox } from '../../../components/ui/checkbox';
 import Image from 'next/image';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [marketingConsent, setMarketingConsent] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const router = useRouter();
 
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        router.push('/account');
-      }
-    };
-    checkSession();
-  }, [router]);
+  // useEffect(() => {
+  //   const checkSession = async () => {
+  //     const { data: { session } } = await supabase.auth.getSession();
+  //     if (session) {
+  //       router.push('/account');
+  //     }
+  //   };
+  //   checkSession();
+  // }, [router]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +52,8 @@ export default function SignUp() {
       const { error: insertError } = await supabase.from('users').insert({
         id: data.user.id,
         email: data.user.email,
-        name: data.user.email?.split('@')[0] || '',
+        name: name || data.user.email?.split('@')[0] || '',
+        marketing_consent: marketingConsent,
         subscription_plan: 'Free'
       });
 
@@ -77,12 +81,31 @@ export default function SignUp() {
         <CardContent className="pt-4">
           <form onSubmit={handleSignUp} className="space-y-6">
             <div className="space-y-2">
+              <Label htmlFor="name" className="text-base font-medium">Name</Label>
+              <Input id="name" type="text" value={name} onChange={e => setName(e.target.value)} required autoFocus className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="email" className="text-base font-medium">Email</Label>
-              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required autoFocus className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
+              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password" className="text-base font-medium">Password</Label>
               <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-xl px-4 py-3 transition-all" />
+            </div>
+            <div className="flex items-center space-x-3 py-2">
+              <Checkbox
+                id="marketing"
+                checked={marketingConsent}
+                onCheckedChange={(checked) => setMarketingConsent(checked as boolean)}
+                className="h-4 w-4 min-w-[1.25rem] min-h-[1.25rem] inline-block align-middle"
+              />
+              <Label
+                htmlFor="marketing"
+                className="text-sm text-muted-foreground cursor-pointer select-none"
+                style={{ marginBottom: 0 }}
+              >
+                I'd like to receive updates about new features and offers
+              </Label>
             </div>
             {error && <div className="text-red-500 text-sm text-center font-medium">{error}</div>}
             {message && <div className="text-green-600 text-sm text-center font-medium">{message}</div>}
