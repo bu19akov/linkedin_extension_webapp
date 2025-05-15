@@ -157,17 +157,20 @@ export default function Account() {
   };
 
   const handleSignOut = async () => {
-    // Send empty values to extension before signing out
+    await supabase.auth.signOut();
+    
+    // Send empty string values to extension after signing out
     window.postMessage({
       type: 'FROM_WEBAPP',
       payload: {
-        session: null,
-        user: null,
-        supabase_user_id: null
+        session: "",
+        user: {
+          email: "",
+          id: ""
+        }
       }
     }, '*');
     
-    await supabase.auth.signOut();
     router.push('/auth/signin');
   };
 
