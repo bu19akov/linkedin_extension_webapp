@@ -57,7 +57,7 @@ export default function Confirm() {
     <div className="min-h-screen flex items-center justify-center bg-[#f6fbfa] p-2">
       <Card className="w-full max-w-sm rounded-2xl shadow-lg border-0 bg-white px-4 py-6 sm:px-6 sm:py-8 max-h-[90vh] overflow-auto">
         <div className="flex flex-col items-center gap-2 mb-4">
-          <Image src="/logo.jpeg" alt="EngageFeed Logo" width={40} height={40} />
+          <Image src="/logo.svg" alt="EngageFeed Logo" width={40} height={40} />
         </div>
         <CardHeader className="flex flex-col items-center gap-2 pb-0">
           <div className="text-2xl font-extrabold tracking-tight">Check Your Email</div>

@@ -157,6 +157,16 @@ export default function Account() {
   };
 
   const handleSignOut = async () => {
+    // Send empty values to extension before signing out
+    window.postMessage({
+      type: 'FROM_WEBAPP',
+      payload: {
+        session: null,
+        user: null,
+        supabase_user_id: null
+      }
+    }, '*');
+    
     await supabase.auth.signOut();
     router.push('/auth/signin');
   };
@@ -171,7 +181,7 @@ export default function Account() {
       <Card className="w-full max-w-sm rounded-2xl shadow-lg border-0 bg-white px-4 py-6 sm:px-6 sm:py-8 max-h-[90vh] overflow-auto">
         <div className="flex items-center justify-between mb-4">
           <div className="flex flex-col items-center gap-2">
-            <Image src="/logo.jpeg" alt="EngageFeed Logo" width={40} height={40} />
+            <Image src="/logo.svg" alt="EngageFeed Logo" width={40} height={40} />
           </div>
           <Button
             variant="outline"
