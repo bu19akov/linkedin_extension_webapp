@@ -163,10 +163,10 @@ export default function Account() {
     window.postMessage({
       type: 'FROM_WEBAPP',
       payload: {
-        session: "",
+        session: " ",
         user: {
-          email: "",
-          id: ""
+          email: " ",
+          id: " "
         }
       }
     }, '*');
