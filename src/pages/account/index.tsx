@@ -10,7 +10,7 @@ import Image from 'next/image';
 
 export default function Account() {
   const router = useRouter();
-  const { verified } = router.query;
+  const { verified, type } = router.query;
   const [loading, setLoading] = useState(true);
   const [verificationMessage, setVerificationMessage] = useState('');
   const messageShown = useRef(false);
@@ -41,18 +41,29 @@ export default function Account() {
 
   // Handle initial verification
   useEffect(() => {
-    if (verified === 'true' && !messageShown.current) {
+    console.log('Account page - verified:', verified, 'type:', type);
+    if (type && !messageShown.current) {
+      messageShown.current = true;
+      setShouldShowMessage(true);
+    } else if (verified === 'true' && !messageShown.current) {
       messageShown.current = true;
       setShouldShowMessage(true);
       const { pathname } = router;
       router.replace(pathname, undefined, { shallow: true });
     }
-  }, [verified, router]);
+  }, [verified, router, type]);
 
   // Handle message display and cleanup
   useEffect(() => {
     if (shouldShowMessage) {
-      setVerificationMessage('Email verified successfully!');
+      console.log('Account page - showing message for type:', type);
+      let message = 'Email verified successfully!';
+      if (type === 'subscription') {
+        message = 'Thank you for your subscription!';
+      } else if (type === 'login') {
+        message = 'Successfully logged in!';
+      }
+      setVerificationMessage(message);
       
       if (timerRef.current) {
         clearTimeout(timerRef.current);
@@ -70,7 +81,7 @@ export default function Account() {
         clearTimeout(timerRef.current);
       }
     };
-  }, [shouldShowMessage]);
+  }, [shouldShowMessage, type]);
 
   useEffect(() => {
     const fetchUser = async () => {

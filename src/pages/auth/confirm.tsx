@@ -9,7 +9,7 @@ export default function Confirm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const { token_hash } = router.query;
+  const { token_hash, type } = router.query;
 
   useEffect(() => {
     const checkSession = async () => {
@@ -38,8 +38,9 @@ export default function Confirm() {
         if (error) {
           setError(error.message);
         } else {
-          // Redirect to sign in page after successful verification
-          router.push('/auth/signin?verified=true');
+          console.log('Confirm page - type:', type);
+          // Redirect to sign in page after successful verification with type parameter
+          router.push(`/auth/signin?verified=true&type=${type || 'login'}`);
         }
       } catch (err) {
         setError('An unexpected error occurred');
@@ -51,7 +52,7 @@ export default function Confirm() {
     if (router.isReady) {
       verifyEmail();
     }
-  }, [router.isReady, token_hash]);
+  }, [router.isReady, token_hash, type]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f6fbfa] p-2">
