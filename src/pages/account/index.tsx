@@ -17,13 +17,6 @@ export default function Account() {
   const timerRef = useRef<NodeJS.Timeout>();
   const [shouldShowMessage, setShouldShowMessage] = useState(false);
 
-  // Change Password
-  const [oldPassword, setOldPassword] = useState('');
-  const [password, setPassword] = useState('');
-  const [pwError, setPwError] = useState('');
-  const [pwMessage, setPwMessage] = useState('');
-  const [pwLoading, setPwLoading] = useState(false);
-
   // Change Email
   const [email, setEmail] = useState('');
   const [emError, setEmError] = useState('');
@@ -102,30 +95,6 @@ export default function Account() {
     fetchUser();
   }, []);
 
-  const handleChangePassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setPwLoading(true);
-    setPwError('');
-    setPwMessage('');
-    // Re-authenticate user with old password
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email: currentEmail, password: oldPassword });
-    if (signInError) {
-      setPwError('Old password is incorrect.');
-      setPwLoading(false);
-      return;
-    }
-    // If old password is correct, update to new password
-    const { error } = await supabase.auth.updateUser({ password });
-    setPwLoading(false);
-    if (error) {
-      setPwError(error.message);
-    } else {
-      setPwMessage('Password updated successfully.');
-      setOldPassword('');
-      setPassword('');
-    }
-  };
-
   const handleChangeEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     setEmLoading(true);
@@ -202,21 +171,6 @@ export default function Account() {
               <p className="text-green-600 text-center font-medium text-sm">{verificationMessage}</p>
             </div>
           )}
-          <form onSubmit={handleChangePassword} className="space-y-4">
-            <div className="space-y-1">
-              <Label htmlFor="old-password" className="text-sm font-medium">Old Password</Label>
-              <Input id="old-password" type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-lg px-3 py-2 text-sm transition-all" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="password" className="text-sm font-medium">New Password</Label>
-              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-lg px-3 py-2 text-sm transition-all" />
-            </div>
-            {pwError && <div className="text-red-500 text-xs text-center font-medium">{pwError}</div>}
-            {pwMessage && <div className="text-green-600 text-xs text-center font-medium">{pwMessage}</div>}
-            <Button type="submit" className="w-full h-10 text-sm font-semibold rounded-lg shadow bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={pwLoading}>
-              {pwLoading ? 'Updating...' : 'Change Password'}
-            </Button>
-          </form>
           <div className="my-6 border-t border-border" />
           <form onSubmit={handleChangeEmail} className="space-y-4">
             <div className="space-y-1">

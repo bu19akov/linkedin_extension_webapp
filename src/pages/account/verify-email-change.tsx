@@ -31,6 +31,15 @@ export default function VerifyEmailChange() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) throw new Error('User not found');
 
+        // Get user's paddle_user_id from users table
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('paddle_user_id')
+          .eq('id', user.id)
+          .single();
+
+        if (userError) throw userError;
+
         // Update email in users table
         const { error: updateError } = await supabase
           .from('users')
@@ -38,6 +47,24 @@ export default function VerifyEmailChange() {
           .eq('id', user.id);
 
         if (updateError) throw updateError;
+
+        // Update Paddle customer email if paddle_user_id exists
+        if (userData?.paddle_user_id) {
+          const response = await fetch('/api/update-paddle-customer', {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              customerId: userData.paddle_user_id,
+              email: email
+            })
+          });
+
+          if (!response.ok) {
+            console.error('Failed to update Paddle customer email:', await response.text());
+          }
+        }
 
         // Redirect to account page with success message
         router.push('/account?verified=true');

@@ -9,7 +9,6 @@ import Image from 'next/image';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -37,12 +36,13 @@ export default function SignIn() {
     setLoading(true);
     setError('');
     setMessage('');
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithOtp({ email });
     setLoading(false);
     if (error) {
       setError(error.message);
     } else {
-      router.push('/');
+      setMessage('Check your email for the login link.');
+      setEmail('');
     }
   };
 
@@ -57,24 +57,21 @@ export default function SignIn() {
           <div className="text-base text-muted-foreground text-center">Sign in to your EngageFeed account below.</div>
         </CardHeader>
         <CardContent className="pt-2">
+          {message && (
+            <div className="mb-4 p-2 bg-green-50 border border-green-200 rounded-xl">
+              <p className="text-green-600 text-center font-medium text-sm">{message}</p>
+            </div>
+          )}
           <form onSubmit={handleSignIn} className="space-y-4">
             <div className="space-y-1">
               <Label htmlFor="email" className="text-sm font-medium">Email</Label>
               <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required autoFocus className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-lg px-3 py-2 text-sm transition-all" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-lg px-3 py-2 text-sm transition-all" />
             </div>
             {error && <div className="text-red-500 text-xs text-center font-medium">{error}</div>}
             <Button type="submit" className="w-full h-10 text-sm font-semibold rounded-lg shadow bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={loading}>
               {loading ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
-          <div className="flex flex-col items-center mt-6 space-y-2">
-            <a href="/auth/forgot" className="text-sm text-muted-foreground hover:underline transition-colors font-medium">Forgot your password?</a>
-            <a href="/auth/signup" className="text-sm text-muted-foreground hover:underline transition-colors font-medium">Don't have an account? <span className="text-primary font-semibold">Sign Up</span></a>
-          </div>
         </CardContent>
       </Card>
     </div>
