@@ -50,13 +50,12 @@ export default function VerifyEmailChange() {
 
         // Update Paddle customer email if paddle_user_id exists
         if (userData?.paddle_user_id) {
-          const response = await fetch('/api/update-paddle-customer', {
+          const response = await fetch(`/api/paddle/customers?customerId=${userData.paddle_user_id}`, {
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              customerId: userData.paddle_user_id,
               email: email
             })
           });

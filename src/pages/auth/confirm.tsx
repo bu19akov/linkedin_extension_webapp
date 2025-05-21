@@ -39,8 +39,12 @@ export default function Confirm() {
           setError(error.message);
         } else {
           console.log('Confirm page - type:', type);
-          // Redirect to sign in page after successful verification with type parameter
-          router.push(`/auth/signin?verified=true&type=${type || 'login'}`);
+          // Redirect to welcome page for new subscriptions, otherwise to sign in
+          if (type === 'subscription') {
+            router.push('/welcome');
+          } else {
+            router.push(`/auth/signin?verified=true&type=${type || 'login'}`);
+          }
         }
       } catch (err) {
         setError('An unexpected error occurred');
