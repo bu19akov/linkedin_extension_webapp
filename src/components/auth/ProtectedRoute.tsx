@@ -3,10 +3,12 @@ import { useRouter } from 'next/router';
 import { supabase } from '../../lib/supabase';
 import { Card, CardContent, CardHeader } from '../../../components/ui/card';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const checkSession = async () => {
@@ -28,11 +30,11 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
             <Image src="/logo.svg" alt="EngageFeed Logo" width={40} height={40} />
           </div>
           <CardHeader className="flex flex-col items-center gap-2 pb-0">
-            <div className="text-2xl font-extrabold tracking-tight">Loading...</div>
+            <div className="text-2xl font-extrabold tracking-tight">{t('loading')}</div>
           </CardHeader>
           <CardContent className="pt-2">
             <div className="text-base text-muted-foreground text-center">
-              Please wait while we verify your session...
+              {t('verifyingSession')}
             </div>
           </CardContent>
         </Card>

@@ -9,6 +9,8 @@ import { Skeleton } from '../../../components/ui/skeleton';
 import Image from 'next/image';
 import Header from '../../components/Header';
 import ProtectedRoute from '../../components/auth/ProtectedRoute';
+import LanguageSwitcher from '../../components/LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 export default function Account() {
   const router = useRouter();
@@ -18,6 +20,7 @@ export default function Account() {
   const messageShown = useRef(false);
   const timerRef = useRef<NodeJS.Timeout>();
   const [shouldShowMessage, setShouldShowMessage] = useState(false);
+  const { t } = useTranslation();
 
   // Change Email
   const [email, setEmail] = useState('');
@@ -45,11 +48,11 @@ export default function Account() {
   useEffect(() => {
     if (shouldShowMessage) {
       console.log('Account page - showing message for type:', type);
-      let message = 'Email verified successfully!';
+      let message = t('emailVerified');
       if (type === 'subscription') {
-        message = 'Thank you for your subscription!';
+        message = t('subscriptionThankYou');
       } else if (type === 'login') {
-        message = 'Successfully logged in!';
+        message = t('loginSuccess');
       }
       setVerificationMessage(message);
       
@@ -69,7 +72,7 @@ export default function Account() {
         clearTimeout(timerRef.current);
       }
     };
-  }, [shouldShowMessage, type]);
+  }, [shouldShowMessage, type, t]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -102,12 +105,12 @@ export default function Account() {
     setEmError('');
     setEmMessage('');
     if (!emailConfirmed) {
-      setEmError('Please verify your current email before changing it.');
+      setEmError(t('verifyEmailFirst'));
       setEmLoading(false);
       return;
     }
     if (!email || email === currentEmail) {
-      setEmError('Please enter a new email address different from your current one.');
+      setEmError(t('enterNewEmail'));
       setEmLoading(false);
       return;
     }
@@ -121,7 +124,7 @@ export default function Account() {
       return;
     }
     setEmLoading(false);
-    setEmMessage('Please check your new email to verify the change. You will be redirected back here after verification.');
+    setEmMessage(t('checkNewEmail'));
     setCurrentEmail(email);
   };
 
@@ -136,6 +139,7 @@ export default function Account() {
                 <div className="flex flex-col items-center gap-2">
                   <Image src="/logo.svg" alt="EngageFeed Logo" width={40} height={40} />
                 </div>
+                <LanguageSwitcher />
               </div>
               <CardHeader className="flex flex-col items-center gap-2 pb-0" />
               <CardContent className="pt-2">
@@ -149,7 +153,7 @@ export default function Account() {
                 <div className="my-6 border-t border-border" />
                 <form onSubmit={handleChangeEmail} className="space-y-4">
                   <div className="space-y-1">
-                    <Label htmlFor="email" className="text-sm font-medium">New Email</Label>
+                    <Label htmlFor="email" className="text-sm font-medium">{t('newEmail')}</Label>
                     <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-lg px-3 py-2 text-sm transition-all" />
                     <div className="h-4">
                       {emailLoading ? (
@@ -159,7 +163,9 @@ export default function Account() {
                           <Skeleton className="h-4 w-20" />
                         </div>
                       ) : (
-                        <div className="text-xs text-muted-foreground">Current: {currentEmail} {emailConfirmed ? '(verified)' : '(not verified)'}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {t('current')}: {currentEmail} {emailConfirmed ? `(${t('verified')})` : `(${t('notVerified')})`}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -168,7 +174,7 @@ export default function Account() {
                     {emMessage && <div className="text-green-600 text-xs text-center font-medium">{emMessage}</div>}
                   </div>
                   <Button type="submit" className="w-full h-10 text-sm font-semibold rounded-lg shadow bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={emLoading}>
-                    {emLoading ? 'Updating...' : 'Change Email'}
+                    {emLoading ? t('updating') : t('changeEmail')}
                   </Button>
                 </form>
               </CardContent>

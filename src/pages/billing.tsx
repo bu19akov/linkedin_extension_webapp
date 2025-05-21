@@ -14,6 +14,7 @@ import Header from '../components/Header';
 import Image from 'next/image';
 import { countries, Country } from '../lib/countries';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
+import { useTranslation } from 'react-i18next';
 
 export default function Billing() {
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function Billing() {
   const [customerId, setCustomerId] = useState<string | null>(null);
   const [userId, setUserId] = useState('');
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -223,9 +225,9 @@ export default function Billing() {
             <Card className="rounded-2xl shadow-lg border-0 bg-white px-4 py-6 sm:px-6 sm:py-8">
               <div className="flex flex-col items-center gap-4 mb-6">
                 <Image src="/logo.svg" alt="EngageFeed Logo" width={60} height={60} />
-                <CardTitle className="text-3xl font-bold text-center">Billing Information</CardTitle>
+                <CardTitle className="text-3xl font-bold text-center">{t('billingInformation')}</CardTitle>
                 <CardDescription className="text-lg text-muted-foreground text-center">
-                  Update your billing address information
+                  {t('updateBillingAddress')}
                 </CardDescription>
               </div>
 
@@ -247,75 +249,75 @@ export default function Billing() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name" className="text-sm font-medium">Full Name</Label>
+                    <Label htmlFor="name" className="text-sm font-medium">{t('fullName')}</Label>
                     <Input
                       id="name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       required
                       className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 rounded-lg border border-border px-3 py-2 text-base transition-all"
-                      placeholder="Enter your full name"
+                      placeholder={t('enterFullName')}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="address" className="text-sm font-medium">Address Line 1</Label>
+                    <Label htmlFor="address" className="text-sm font-medium">{t('addressLine1')}</Label>
                     <Input
                       id="address"
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                       required
                       className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 rounded-lg border border-border px-3 py-2 text-base transition-all"
-                      placeholder="Enter your street address"
+                      placeholder={t('enterStreetAddress')}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="address2" className="text-sm font-medium">Address Line 2 (Optional)</Label>
+                    <Label htmlFor="address2" className="text-sm font-medium">{t('addressLine2')}</Label>
                     <Input
                       id="address2"
                       value={formData.address2}
                       onChange={(e) => setFormData({ ...formData, address2: e.target.value })}
                       className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 rounded-lg border border-border px-3 py-2 text-base transition-all"
-                      placeholder="Apartment, suite, unit, etc."
+                      placeholder={t('enterAddressLine2')}
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="city" className="text-sm font-medium">City</Label>
+                      <Label htmlFor="city" className="text-sm font-medium">{t('city')}</Label>
                       <Input
                         id="city"
                         value={formData.city}
                         onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                         required
                         className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 rounded-lg border border-border px-3 py-2 text-base transition-all"
-                        placeholder="Enter your city"
+                        placeholder={t('enterCity')}
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="state" className="text-sm font-medium">State/Region</Label>
+                      <Label htmlFor="state" className="text-sm font-medium">{t('stateRegion')}</Label>
                       <Input
                         id="state"
                         value={formData.state}
                         onChange={(e) => setFormData({ ...formData, state: e.target.value })}
                         required
                         className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 rounded-lg border border-border px-3 py-2 text-base transition-all"
-                        placeholder="Enter your state"
+                        placeholder={t('enterState')}
                       />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="zipCode" className="text-sm font-medium">ZIP/Postal Code</Label>
+                      <Label htmlFor="zipCode" className="text-sm font-medium">{t('zipPostalCode')}</Label>
                       <Input
                         id="zipCode"
                         value={formData.zipCode}
                         onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
                         required
                         className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 rounded-lg border border-border px-3 py-2 text-base transition-all"
-                        placeholder="Enter your ZIP code"
+                        placeholder={t('enterZipCode')}
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="country" className="text-sm font-medium">Country</Label>
+                      <Label htmlFor="country" className="text-sm font-medium">{t('country')}</Label>
                       <div className="relative">
                         <button
                           type="button"
@@ -326,7 +328,7 @@ export default function Billing() {
                         >
                           {formData.country
                             ? (<span className="flex items-center gap-2">{countries.find((c) => c.code === formData.country)?.flag} {countries.find((c) => c.code === formData.country)?.name}</span>)
-                            : <span className="text-muted-foreground">Select country...</span>}
+                            : <span className="text-muted-foreground">{t('selectCountry')}</span>}
                           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </button>
                         {open && (
@@ -367,10 +369,10 @@ export default function Billing() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      <span>Saving...</span>
+                      <span>{t('saving')}</span>
                     </div>
                   ) : (
-                    'Update Billing Information'
+                    t('updateBillingInfo')
                   )}
                 </Button>
               </form>

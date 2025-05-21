@@ -7,6 +7,8 @@ import { Button } from '../../../components/ui/button';
 import { Label } from '../../../components/ui/label';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../../components/LanguageSwitcher';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -15,6 +17,7 @@ export default function SignIn() {
   const [message, setMessage] = useState('');
   const router = useRouter();
   const { verified, type } = router.query;
+  const { t } = useTranslation();
 
   useEffect(() => {
     const checkSession = async () => {
@@ -48,12 +51,12 @@ export default function SignIn() {
     setLoading(false);
     if (error) {
       if (error.message.includes('Signups not allowed')) {
-        setError('Sign-ups are currently disabled. Want to upgrade to Pro? ');
+        setError(t('signupsDisabled'));
       } else {
         setError(error.message);
       }
     } else {
-      setMessage('Check your email for the login link.');
+      setMessage(t('checkEmailForLink'));
       setEmail('');
     }
   };
@@ -63,10 +66,13 @@ export default function SignIn() {
       <Card className="w-full max-w-sm rounded-2xl shadow-lg border-0 bg-white px-4 py-6 sm:px-6 sm:py-8 max-h-[90vh] overflow-auto">
         <div className="flex flex-col items-center gap-2 mb-4">
           <Image src="/logo.svg" alt="EngageFeed Logo" width={40} height={40} />
+          <div className="absolute top-4 right-4">
+            <LanguageSwitcher />
+          </div>
         </div>
         <CardHeader className="flex flex-col items-center gap-2 pb-0">
-          <div className="text-2xl font-extrabold tracking-tight">Sign In</div>
-          <div className="text-base text-muted-foreground text-center">Sign in to your EngageFeed account below.</div>
+          <div className="text-2xl font-extrabold tracking-tight">{t('signIn')}</div>
+          <div className="text-base text-muted-foreground text-center">{t('signInToEngageFeed')}</div>
         </CardHeader>
         <CardContent className="pt-2">
           {message && (
@@ -76,21 +82,21 @@ export default function SignIn() {
           )}
           <form onSubmit={handleSignIn} className="space-y-4">
             <div className="space-y-1">
-              <Label htmlFor="email" className="text-sm font-medium">Email</Label>
+              <Label htmlFor="email" className="text-sm font-medium">{t('email')}</Label>
               <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required autoFocus className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-lg px-3 py-2 text-sm transition-all" />
             </div>
             {error && (
               <div className="text-red-500 text-xs text-center font-medium">
                 {error}
-                {error.includes('Sign-ups are currently disabled') && (
+                {error === t('signupsDisabled') && (
                   <Link href="https://engagefeed.io/pricing" className="text-blue-600 hover:underline ml-1">
-                    Check our pricing
+                    {t('checkPricing')}
                   </Link>
                 )}
               </div>
             )}
             <Button type="submit" className="w-full h-10 text-sm font-semibold rounded-lg shadow bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? t('signingIn') : t('signIn')}
             </Button>
           </form>
         </CardContent>

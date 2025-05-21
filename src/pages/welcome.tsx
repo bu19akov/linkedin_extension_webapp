@@ -8,10 +8,12 @@ import Link from 'next/link';
 import Header from '../components/Header';
 import confetti from 'canvas-confetti';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
+import { useTranslation } from 'react-i18next';
 
 export default function Welcome() {
   const router = useRouter();
   const glowRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const checkSession = async () => {
@@ -81,9 +83,9 @@ export default function Welcome() {
             <Card className="rounded-2xl shadow-lg border-0 bg-white px-4 py-6 sm:px-6 sm:py-8 relative z-10">
               <div className="flex flex-col items-center gap-4">
                 <Image src="/logo.svg" alt="EngageFeed Logo" width={60} height={60} />
-                <h1 className="text-3xl font-bold text-center">Welcome to EngageFeed!</h1>
+                <h1 className="text-3xl font-bold text-center">{t('welcomeToEngageFeed')}</h1>
                 <p className="text-lg text-muted-foreground text-center">
-                  Thank you for subscribing to EngageFeed. We're excited to have you on board!
+                  {t('thankYouForSubscribing')}
                 </p>
                 <div className="w-full aspect-video bg-black rounded-xl overflow-hidden my-4">
                   <video 
@@ -92,7 +94,7 @@ export default function Welcome() {
                     poster="/video-poster.jpg"
                   >
                     <source src="/welcome-video.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
+                    {t('videoNotSupported')}
                   </video>
                 </div>
               </div>

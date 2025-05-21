@@ -6,60 +6,30 @@ import { Button } from '../../../components/ui/button';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 
-export default function Confirm() {
+export default function VerifyEmailChange() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const router = useRouter();
-  const { t, i18n } = useTranslation();
-  const { token_hash, type } = router.query;
+  const { t } = useTranslation();
 
   useEffect(() => {
-    const handleEmailConfirmation = async () => {
+    const handleEmailChangeVerification = async () => {
       try {
-        const { error } = await supabase.auth.verifyOtp({
-          token_hash: token_hash as string,
-          type: 'email'
-        });
+        const { error } = await supabase.auth.getSession();
+        if (error) throw error;
 
-        if (error) {
-          setError(error.message);
-        } else {
-          console.log('Confirm page - type:', type);
-          // Get user's language preference from database
-          const { data: { session } } = await supabase.auth.getSession();
-          if (session?.user) {
-            const { data: userData } = await supabase
-              .from('users')
-              .select('language')
-              .eq('id', session.user.id)
-              .single();
-
-            if (userData?.language) {
-              // Update language if different from current
-              if (i18n.language !== userData.language) {
-                await i18n.changeLanguage(userData.language);
-              }
-              // Clear localStorage language preference
-              localStorage.removeItem('preferredLanguage');
-            }
-          }
-
-          // Redirect to welcome page for new subscriptions, otherwise to sign in
-          if (type === 'subscription') {
-            router.push('/welcome');
-          } else {
-            router.push(`/auth/signin?verified=true&type=${type || 'login'}`);
-          }
-        }
-      } catch (err) {
-        setError(t('errorConfirmingEmail'));
+        // Redirect to account page after successful verification
+        router.push('/account');
+      } catch (error) {
+        console.error('Error:', error);
+        setError(t('errorVerifyingEmailChange'));
       } finally {
         setLoading(false);
       }
     };
 
-    handleEmailConfirmation();
-  }, [router.isReady, t, type, token_hash, i18n]);
+    handleEmailChangeVerification();
+  }, [router, t]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f6fbfa] p-2">
@@ -68,33 +38,33 @@ export default function Confirm() {
           <Image src="/logo.svg" alt="EngageFeed Logo" width={40} height={40} />
         </div>
         <CardHeader className="flex flex-col items-center gap-2 pb-0">
-          <div className="text-2xl font-extrabold tracking-tight">{t('confirmingEmail')}</div>
+          <div className="text-2xl font-extrabold tracking-tight">{t('verifyingEmailChange')}</div>
           <div className="text-base text-muted-foreground text-center">{t('pleaseWait')}</div>
         </CardHeader>
         <CardContent className="pt-2">
           {loading ? (
             <div className="text-center py-4">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0073e6] mx-auto"></div>
-              <p className="mt-2 text-sm text-muted-foreground">{t('confirmingYourEmail')}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{t('verifyingYourEmailChange')}</p>
             </div>
           ) : error ? (
             <div className="text-center py-4">
               <p className="text-red-500 text-sm">{error}</p>
               <Button
-                onClick={() => router.push('/auth/signin')}
+                onClick={() => router.push('/account')}
                 className="mt-4 w-full h-10 text-sm font-semibold rounded-lg shadow bg-[#0073e6] hover:bg-[#005bb5] text-white"
               >
-                {t('backToSignIn')}
+                {t('backToAccount')}
               </Button>
             </div>
           ) : (
             <div className="text-center py-4">
-              <p className="text-green-600 text-sm font-medium">{t('emailConfirmed')}</p>
+              <p className="text-green-600 text-sm font-medium">{t('emailChangeVerified')}</p>
               <Button
-                onClick={() => router.push('/')}
+                onClick={() => router.push('/account')}
                 className="mt-4 w-full h-10 text-sm font-semibold rounded-lg shadow bg-[#0073e6] hover:bg-[#005bb5] text-white"
               >
-                {t('continueToDashboard')}
+                {t('continueToAccount')}
               </Button>
             </div>
           )}

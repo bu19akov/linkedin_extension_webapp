@@ -4,10 +4,13 @@ import { useRouter } from 'next/router';
 import { Button } from '../../components/ui/button';
 import { supabase } from '../lib/supabase';
 import { useState } from 'react';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 export default function Header() {
   const router = useRouter();
   const [portalLoading, setPortalLoading] = useState(false);
+  const { t } = useTranslation();
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -84,14 +87,14 @@ export default function Header() {
               disabled={portalLoading}
               className="text-gray-600 hover:text-[#0073e6]"
             >
-              {portalLoading ? 'Loading...' : 'Manage Subscription'}
+              {portalLoading ? t('loading') : t('manageSubscription')}
             </Button>
             <Link href="/account">
               <Button 
                 variant="ghost" 
                 className={`${isActive('/account') ? 'text-[#0073e6]' : 'text-gray-600'} hover:text-[#0073e6]`}
               >
-                Account
+                {t('account')}
               </Button>
             </Link>
             <Link href="/billing">
@@ -99,7 +102,7 @@ export default function Header() {
                 variant="ghost" 
                 className={`${isActive('/billing') ? 'text-[#0073e6]' : 'text-gray-600'} hover:text-[#0073e6]`}
               >
-                Billing
+                {t('billing')}
               </Button>
             </Link>
             <Button
@@ -108,7 +111,7 @@ export default function Header() {
               onClick={handleSignOut}
               className="ml-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-none border-0"
             >
-              Sign Out
+              {t('signOut')}
             </Button>
           </nav>
         </div>
