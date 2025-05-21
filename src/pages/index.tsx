@@ -1,25 +1,19 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { supabase } from '../lib/supabase';
+import ProtectedRoute from '../components/auth/ProtectedRoute';
 
 export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        router.push('/account');
-      } else {
-        router.push('/auth/signin');
-      }
-    };
-    checkSession();
+    router.replace('/account');
   }, [router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f6fbfa]">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-    </div>
+    <ProtectedRoute>
+      <div className="min-h-screen flex items-center justify-center bg-[#f6fbfa]">
+        Loading...
+      </div>
+    </ProtectedRoute>
   );
 } 

@@ -3,9 +3,11 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Button } from '../../components/ui/button';
 import { supabase } from '../lib/supabase';
+import { useState } from 'react';
 
 export default function Header() {
   const router = useRouter();
+  const [portalLoading, setPortalLoading] = useState(false);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -21,6 +23,40 @@ export default function Header() {
       }
     }, '*');
     router.push('/auth/signin');
+  };
+
+  const handlePortalSession = async () => {
+    setPortalLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('No active session');
+      }
+
+      const response = await fetch('/api/paddle/portal-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create portal session');
+      }
+
+      const data = await response.json();
+      if (data.data?.urls?.general?.overview) {
+        window.location.href = data.data.urls.general.overview;
+      } else {
+        throw new Error('Invalid portal session response');
+      }
+    } catch (error) {
+      console.error('Error creating portal session:', error);
+    } finally {
+      setPortalLoading(false);
+    }
   };
 
   const isActive = (path: string) => router.pathname === path;
@@ -42,7 +78,14 @@ export default function Header() {
           </div>
           
           <nav className="flex items-center space-x-4">
-            
+            <Button
+              variant="ghost"
+              onClick={handlePortalSession}
+              disabled={portalLoading}
+              className="text-gray-600 hover:text-[#0073e6]"
+            >
+              {portalLoading ? 'Loading...' : 'Manage Subscription'}
+            </Button>
             <Link href="/account">
               <Button 
                 variant="ghost" 

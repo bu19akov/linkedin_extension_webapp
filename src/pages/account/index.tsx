@@ -1,19 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../../lib/supabase';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../components/ui/card';
+import { Card, CardContent, CardHeader } from '../../../components/ui/card';
 import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import { Label } from '../../../components/ui/label';
 import { Skeleton } from '../../../components/ui/skeleton';
-import { User } from 'lucide-react';
 import Image from 'next/image';
 import Header from '../../components/Header';
+import ProtectedRoute from '../../components/auth/ProtectedRoute';
 
 export default function Account() {
   const router = useRouter();
   const { verified, type } = router.query;
-  const [loading, setLoading] = useState(true);
   const [emailLoading, setEmailLoading] = useState(true);
   const [verificationMessage, setVerificationMessage] = useState('');
   const messageShown = useRef(false);
@@ -28,19 +27,6 @@ export default function Account() {
   const [currentEmail, setCurrentEmail] = useState('');
   const [userId, setUserId] = useState('');
   const [emailConfirmed, setEmailConfirmed] = useState(false);
-
-  // Auth check before rendering
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.replace('/auth/signin');
-      } else {
-        setLoading(false);
-      }
-    };
-    checkSession();
-  }, [router]);
 
   // Handle initial verification
   useEffect(() => {
@@ -130,7 +116,6 @@ export default function Account() {
     });
     if (error) {
       setEmError(error.message);
-      // eslint-disable-next-line no-console
       console.error('Supabase email update error:', error);
       setEmLoading(false);
       return;
@@ -140,60 +125,57 @@ export default function Account() {
     setCurrentEmail(email);
   };
 
-  // Don't render sensitive content until auth is checked
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center bg-[#f6fbfa]">Loading...</div>;
-  }
-
   return (
-    <div className="min-h-screen bg-[#f6fbfa] relative overflow-x-hidden">
-      <Header />
-      <main className="flex items-center justify-center min-h-screen px-4 bg-[#f6fbfa]">
-        <div className="max-w-sm mx-auto w-full">
-          <Card className="rounded-2xl shadow-lg border-0 bg-white px-4 py-6 sm:px-6 sm:py-8 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex flex-col items-center gap-2">
-                <Image src="/logo.svg" alt="EngageFeed Logo" width={40} height={40} />
-              </div>
-            </div>
-            <CardHeader className="flex flex-col items-center gap-2 pb-0" />
-            <CardContent className="pt-2">
-              <div className="min-h-[28px]">
-                {verificationMessage && (
-                  <div className="mb-4 p-2 bg-green-50 border border-green-200 rounded-xl">
-                    <p className="text-green-600 text-center font-medium text-sm">{verificationMessage}</p>
-                  </div>
-                )}
-              </div>
-              <div className="my-6 border-t border-border" />
-              <form onSubmit={handleChangeEmail} className="space-y-4">
-                <div className="space-y-1">
-                  <Label htmlFor="email" className="text-sm font-medium">New Email</Label>
-                  <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-lg px-3 py-2 text-sm transition-all" />
-                  <div className="h-4">
-                    {emailLoading ? (
-                      <div className="flex items-center gap-1">
-                        <Skeleton className="h-4 w-16" />
-                        <Skeleton className="h-4 w-48" />
-                        <Skeleton className="h-4 w-20" />
-                      </div>
-                    ) : (
-                      <div className="text-xs text-muted-foreground">Current: {currentEmail} {emailConfirmed ? '(verified)' : '(not verified)'}</div>
-                    )}
-                  </div>
+    <ProtectedRoute>
+      <div className="min-h-screen bg-[#f6fbfa] relative overflow-x-hidden">
+        <Header />
+        <main className="flex items-center justify-center min-h-screen px-4 bg-[#f6fbfa]">
+          <div className="max-w-sm mx-auto w-full">
+            <Card className="rounded-2xl shadow-lg border-0 bg-white px-4 py-6 sm:px-6 sm:py-8 w-full">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex flex-col items-center gap-2">
+                  <Image src="/logo.svg" alt="EngageFeed Logo" width={40} height={40} />
                 </div>
-                <div className="min-h">
-                  {emError && <div className="text-red-500 text-xs text-center font-medium">{emError}</div>}
-                  {emMessage && <div className="text-green-600 text-xs text-center font-medium">{emMessage}</div>}
+              </div>
+              <CardHeader className="flex flex-col items-center gap-2 pb-0" />
+              <CardContent className="pt-2">
+                <div className="min-h-[28px]">
+                  {verificationMessage && (
+                    <div className="mb-4 p-2 bg-green-50 border border-green-200 rounded-xl">
+                      <p className="text-green-600 text-center font-medium text-sm">{verificationMessage}</p>
+                    </div>
+                  )}
                 </div>
-                <Button type="submit" className="w-full h-10 text-sm font-semibold rounded-lg shadow bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={emLoading}>
-                  {emLoading ? 'Updating...' : 'Change Email'}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-    </div>
+                <div className="my-6 border-t border-border" />
+                <form onSubmit={handleChangeEmail} className="space-y-4">
+                  <div className="space-y-1">
+                    <Label htmlFor="email" className="text-sm font-medium">New Email</Label>
+                    <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required className="bg-muted/60 focus:bg-white focus:shadow-lg focus:ring-2 focus:ring-primary/30 border border-border rounded-lg px-3 py-2 text-sm transition-all" />
+                    <div className="h-4">
+                      {emailLoading ? (
+                        <div className="flex items-center gap-1">
+                          <Skeleton className="h-4 w-16" />
+                          <Skeleton className="h-4 w-48" />
+                          <Skeleton className="h-4 w-20" />
+                        </div>
+                      ) : (
+                        <div className="text-xs text-muted-foreground">Current: {currentEmail} {emailConfirmed ? '(verified)' : '(not verified)'}</div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="min-h">
+                    {emError && <div className="text-red-500 text-xs text-center font-medium">{emError}</div>}
+                    {emMessage && <div className="text-green-600 text-xs text-center font-medium">{emMessage}</div>}
+                  </div>
+                  <Button type="submit" className="w-full h-10 text-sm font-semibold rounded-lg shadow bg-[#0073e6] hover:bg-[#005bb5] text-white" disabled={emLoading}>
+                    {emLoading ? 'Updating...' : 'Change Email'}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+    </ProtectedRoute>
   );
 } 
